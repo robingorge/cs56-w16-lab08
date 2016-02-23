@@ -26,10 +26,13 @@ public class Main {
     staticFileLocation("/public");
 
     get("/hello", (req, res) -> {
-	    RelativisticModel.select();
-	    Amount<Mass> m = Amount.valueOf("12 GeV").to(KILOGRAM);
-	    return "E=mc^2: 12 GeV = " + m.toString();
-	});
+      RelativisticModel.select();
+
+      String energy = System.getenv().get("ENERGY");
+
+      Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
+      return "E=mc^2: " + energy + " = " + m.toString();
+    });
     get("/ucsb", (req, res) -> "Go Gauchos");
     
     get("/", (request, response) -> {
@@ -54,6 +57,7 @@ public class Main {
         while (rs.next()) {
           output.add( "Read from DB: " + rs.getTimestamp("tick"));
         }
+
 
         attributes.put("results", output);
         return new ModelAndView(attributes, "db.ftl");
